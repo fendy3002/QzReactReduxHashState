@@ -1,3 +1,3 @@
-# React Confirmation Button
+# React Redux Hash State
 
-A react component to create a confirmation button.
+A react redux module to sync between state and hash key value
