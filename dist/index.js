@@ -17,6 +17,30 @@ var _lodash2 = _interopRequireDefault(_lodash);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var QzReactReduxHashState = {
+    middleware: function middleware(configuration) {
+        var updateHanlder = null;
+        return function (store) {
+            return function (next) {
+                return function (action) {
+                    var actionResult = next(action);
+                    var newState = store.getState();
+                    if (updateHanlder) {
+                        clearTimeout(updateHanlder);
+                    }
+                    updateHanlder = setTimeout(function () {
+                        for (var key in configuration) {
+                            var toCompare = newState[key];
+                            var clearPrefix = prefixWithSeparator(configuration[key], ".");
+                            var hashed = _queryString2.default.parse(window.location.hash);
+                            var newParam = _queryString2.default.stringify(_extends({}, hashed, prefixJson(toCompare, clearPrefix)));
+                            window.location.hash = newParam;
+                        }
+                    }, 700);
+                    return actionResult;
+                };
+            };
+        };
+    },
     sync: function sync(handler) {
         var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
 

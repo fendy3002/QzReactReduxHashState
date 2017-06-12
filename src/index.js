@@ -2,6 +2,29 @@ import qs from 'query-string';
 import lo from 'lodash';
 
 var QzReactReduxHashState = {
+    middleware : function(configuration){
+        var updateHanlder = null;
+        return store => next => action => {
+            var actionResult = next(action);
+            var newState = store.getState();
+            if(updateHanlder){ clearTimeout(updateHanlder); }
+            updateHanlder = setTimeout(() => {
+                for(var key in configuration){
+                    var toCompare = newState[key];
+                    var clearPrefix = prefixWithSeparator(configuration[key], ".");
+                    var hashed = qs.parse(window.location.hash);
+                    var newParam = qs.stringify(
+                        {
+                            ...hashed,
+                            ...prefixJson(toCompare, clearPrefix)
+                        }
+                    );
+                    window.location.hash = newParam;
+                }
+            }, 700);
+            return actionResult;
+        };
+    },
     sync : function(handler, prefix = ""){
         var clearPrefix = prefixWithSeparator(prefix, ".");
         var updateHanlder = null;
