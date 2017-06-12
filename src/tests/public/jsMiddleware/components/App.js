@@ -39,8 +39,9 @@ var App = function({filter, navigation, setFilter, setNavigation}){
         </div>
         <div>
             <label>Title</label>
-            <input name="title" ref={(node) => { refTitle = node; }}
-            defaultValue={filter.title} onChange={()=> onChange()} />
+            <textarea name="title" ref={(node) => { refTitle = node; }}
+                onPaste={()=> refTitle.value = refTitle.value.replace(/\n$/, "") }
+            defaultValue={filter.title} onChange={()=> onChange()}></textarea>
         </div>
         <div>
             <label>Offset</label>
