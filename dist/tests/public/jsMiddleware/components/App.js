@@ -88,8 +88,11 @@ var App = function App(_ref) {
                 null,
                 'Title'
             ),
-            _react2.default.createElement('input', { name: 'title', ref: function ref(node) {
+            _react2.default.createElement('textarea', { name: 'title', ref: function ref(node) {
                     refTitle = node;
+                },
+                onPaste: function onPaste() {
+                    return refTitle.value = refTitle.value.replace(/\n$/, "");
                 },
                 defaultValue: filter.title, onChange: function onChange() {
                     return _onChange();
